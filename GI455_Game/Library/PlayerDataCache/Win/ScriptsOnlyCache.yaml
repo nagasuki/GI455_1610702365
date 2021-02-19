@@ -1,9 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - ManoChat
-    - TextBoxChatFromClient
-    - TextBoxChatFromServer
+    - LobbyRoomExample.WebsocketConnection
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.TextMeshPro.dll:
@@ -26,14 +24,11 @@ ScriptsOnlyBuild:
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
-    - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
-    - UnityEngine.UI.LayoutElement
     - UnityEngine.UI.RawImage
     - UnityEngine.UI.Text
-    - UnityEngine.UI.Toggle
     - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
     Assets/ProgramChat/Scene/Homework Week2.unity:
@@ -60,43 +55,33 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11162}
     - Class: 114
-      Script: {instanceID: 11164}
-    - Class: 114
       Script: {instanceID: 11166}
     - Class: 114
       Script: {instanceID: 11184}
     - Class: 114
-      Script: {instanceID: 11216}
+      Script: {instanceID: 11310}
     - Class: 114
-      Script: {instanceID: 11386}
+      Script: {instanceID: 11384}
     - Class: 114
-      Script: {instanceID: 11498}
+      Script: {instanceID: 11768}
     - Class: 114
-      Script: {instanceID: 11770}
+      Script: {instanceID: 11794}
     - Class: 114
-      Script: {instanceID: 11796}
+      Script: {instanceID: 12152}
     - Class: 114
-      Script: {instanceID: 12154}
+      Script: {instanceID: 12174}
     - Class: 114
-      Script: {instanceID: 12176}
+      Script: {instanceID: 12336}
     - Class: 114
-      Script: {instanceID: 12338}
+      Script: {instanceID: 12368}
     - Class: 114
-      Script: {instanceID: 12370}
+      Script: {instanceID: 12382}
     - Class: 114
-      Script: {instanceID: 12384}
+      Script: {instanceID: 12628}
     - Class: 114
-      Script: {instanceID: 12446}
+      Script: {instanceID: 12774}
     - Class: 114
-      Script: {instanceID: 12630}
-    - Class: 114
-      Script: {instanceID: 12776}
-    - Class: 114
-      Script: {instanceID: 12978}
-    - Class: 114
-      Script: {instanceID: 12980}
-    - Class: 114
-      Script: {instanceID: 12994}
+      Script: {instanceID: 12976}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -146,12 +131,6 @@ ScriptsOnlyBuild:
     className: TMP_SelectionCaret
   - hash:
       serializedVersion: 2
-      Hash: c1547d88dc488450ef46986b04f73023
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: TextBoxChatFromServer
-  - hash:
-      serializedVersion: 2
       Hash: 87ff43d2baf3385cba327d8f803a4ebb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -176,9 +155,9 @@ ScriptsOnlyBuild:
     className: PlayerQuitHandler
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: e79903e9cb8eb5ef6c3f64ecd7f9bd59
     assemblyName: Assembly-CSharp.dll
-    namespaceName: ProgramChat
+    namespaceName: LobbyRoomExample
     className: WebsocketConnection
   - hash:
       serializedVersion: 2
@@ -416,12 +395,6 @@ ScriptsOnlyBuild:
     className: Physics2DRaycaster
   - hash:
       serializedVersion: 2
-      Hash: 7678957f44d593c58ab4da54cea7d9d5
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: TextBoxChatFromClient
-  - hash:
-      serializedVersion: 2
       Hash: c1933cc0a2f4ff6eb13333347497beb3
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -530,7 +503,7 @@ ScriptsOnlyBuild:
     className: StandaloneInputModule
   - hash:
       serializedVersion: 2
-      Hash: 05d7b4ba8efbd39c874bbb0568947d0f
+      Hash: 947fc9f21ae1d8638b634dc407a98b64
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ManoChat

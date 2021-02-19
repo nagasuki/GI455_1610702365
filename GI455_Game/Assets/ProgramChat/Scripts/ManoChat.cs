@@ -6,129 +6,136 @@ using WebSocketSharp;
 
 public class ManoChat : MonoBehaviour
 {
-    [Header("WebControl")]
-    private WebSocket webSocket;
-    public InputField yourIP;
-    public InputField yourPort;
-    public InputField yourMessage;
-    public InputField yourUsername;
-    public GameObject textBoxFromClient;
-    public GameObject textBoxFromServer;
-    public Transform posTextBox;
-    public TextBoxChatFromServer fromServer;
-    public List<string> usernameList;
+    [Header("UserBar")]
+    public InputField usernameInputField;
 
-    [Header("InterfaceManoChat")]
-    public GameObject loginPage;
-    public GameObject chatPage;
-    bool checkUsername;
+    [Header("RoomManage")]
+    public GameObject mainRoom;
+    public GameObject lobbyRoom;
+    public GameObject chatRoom;
+    public List<string> roomList;
 
-    [Header("TextToString")]
-    private string ip;
-    private string port;
-    public string message;
-    public string messageServer;
-    public string username;
-    public List<string> messageHistory;
-    public string[] _messagesUser;
+    [Header("message")]
+    public InputField messageInputField;
 
-    // Start is called before the first frame update
-    void Start()
+    public struct SocketEvent
     {
-        loginPage.SetActive(true);
-        chatPage.SetActive(false);
+        public string eventName;
+        public string data;
 
-        fromServer = GameObject.FindGameObjectWithTag("ChatServer").GetComponent<TextBoxChatFromServer>();
-    }       
-
-    // Update is called once per frame
-    void Update()
-    {
-        ip = yourIP.text;
-        port = yourPort.text;
-        username = yourUsername.text;
-    }
-
-    public void SignInToManoChat()
-    {
-        webSocket = new WebSocket("ws://" + ip + ":" + port + "/");
-
-        loginPage.SetActive(false);
-        chatPage.SetActive(true);
-        webSocket.Connect();
-        username = yourUsername.text;
-        webSocket.OnMessage += OnMessage;
-        checkUsername = true;
-
-        if (port != "8080" && yourIP.text != "127.0.0.1" && yourUsername.text == null)
+        public SocketEvent(string eventName, string data)
         {
-            loginPage.SetActive(true);
+            this.eventName = eventName;
+            this.data = data;
         }
     }
 
-    public void RememberInfo()
+    private WebSocket ws;
+
+    private string tempMessageString;
+
+    public delegate void DelegateHandle(SocketEvent result);
+    public DelegateHandle OnCreateRoom;
+    public DelegateHandle OnJoinRoom;
+    public DelegateHandle OnLeaveRoom;
+
+    private void Start()
     {
-        yourIP.text = null;
-        yourPort.text = null;
-        yourUsername.text = null;
-        print("Delete");
+        mainRoom.SetActive(true);
+        lobbyRoom.SetActive(false);
+        chatRoom.SetActive(false);
     }
 
-    public void SendMessage()
+    private void Update()
     {
-        if (webSocket.ReadyState == WebSocketState.Open)
-        {
-            message = yourMessage.text;
-            webSocket.Send(username + "@" + message);
-            yourMessage.text = null;
-            var textboxServer = GetComponent<TextBoxChatFromServer>();
-            messageHistory.Add(username + "@" + textboxServer.usernameFromServer.text);
-        }
+        UpdateNotifyMessage();
     }
 
-    public void OnMessage(object sender, MessageEventArgs messageEventArgs)
-    {        
-        _messagesUser = messageEventArgs.Data.Split('@');
-        message = _messagesUser[1];
+    public void Connect()
+    {
+        string url = "ws://127.0.0.1:8080/";
 
-        usernameList.Add(username);
+        ws = new WebSocket(url);
 
-        Debug.Log(_messagesUser[0]);
-        if (username != _messagesUser[0])
+        ws.OnMessage += OnMessage;
+
+        ws.Connect();
+
+        lobbyRoom.SetActive(true);
+        mainRoom.SetActive(false);
+    }
+
+    public void CreateRoom(string roomName)
+    {
+        SocketEvent socketEvent = new SocketEvent("CreateRoom", roomName);
+
+        string toJsonStr = JsonUtility.ToJson(socketEvent);
+
+        ws.Send(toJsonStr);
+
+        chatRoom.SetActive(true);
+        lobbyRoom.SetActive(false);
+    }
+
+    public void LeaveRoom()
+    {
+        SocketEvent socketEvent = new SocketEvent("LeaveRoom", "");
+
+        string toJsonStr = JsonUtility.ToJson(socketEvent);
+
+        ws.Send(toJsonStr);
+    }
+
+    public void Disconnect()
+    {
+        if (ws != null)
+            ws.Close();
+
+        mainRoom.SetActive(true);
+        lobbyRoom.SetActive(false);
+        chatRoom.SetActive(false);
+    }
+
+    public void _SendMessage(string message)
+    {
+
+    }
+
+    private void OnDestroy()
+    {
+        Disconnect();
+    }
+
+    private void UpdateNotifyMessage()
+    {
+        if (string.IsNullOrEmpty(tempMessageString) == false)
         {
-            for (int i = 0; i < messageHistory.Count; i++)
+            SocketEvent receiveMessageData = JsonUtility.FromJson<SocketEvent>(tempMessageString);
+
+            if (receiveMessageData.eventName == "CreateRoom")
             {
-                messageHistory[i] = message;
+                if (OnCreateRoom != null)
+                    OnCreateRoom(receiveMessageData);
+            }
+            else if (receiveMessageData.eventName == "JoinRoom")
+            {
+                if (OnJoinRoom != null)
+                    OnJoinRoom(receiveMessageData);
+            }
+            else if (receiveMessageData.eventName == "LeaveRoom")
+            {
+                if (OnLeaveRoom != null)
+                    OnLeaveRoom(receiveMessageData);
             }
 
-            var messageFromServer = true;
-            if (messageFromServer)
-            {
-                var newTextBox = Instantiate(textBoxFromServer, posTextBox.position, Quaternion.identity);
-                newTextBox.transform.parent = posTextBox;
-
-                messageFromServer = false;
-            }
-        }
-        else
-        {
-            var newTextBox = Instantiate(textBoxFromClient, posTextBox.position, Quaternion.identity);
-            newTextBox.transform.parent = posTextBox;
+            tempMessageString = "";
         }
     }
 
-    public void LogOutManoChat()
+    private void OnMessage(object sender, MessageEventArgs messageEventArgs)
     {
-        webSocket.Close();
-        loginPage.SetActive(true);
-        chatPage.SetActive(false);
-    }
+        Debug.Log(messageEventArgs.Data);
 
-    public void OnDestroy()
-    {
-        if (webSocket != null)
-        {
-            webSocket.Close();
-        }
+        tempMessageString = messageEventArgs.Data;
     }
 }

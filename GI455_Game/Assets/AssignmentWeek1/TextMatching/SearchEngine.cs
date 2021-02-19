@@ -9,7 +9,7 @@ public class SearchEngine : MonoBehaviour
     public Text wordData;
     public string[] messages;
 
-    private string statName;
+    private string _statNameGG;
 
     private void Update()
     {
@@ -21,7 +21,7 @@ public class SearchEngine : MonoBehaviour
 
     public void FindAnswer()
     {
-        string outputWord = statName;
+        string outputWord = _statNameGG;
 
         for (int i = 0; i < messages.Length; i++)
         {
