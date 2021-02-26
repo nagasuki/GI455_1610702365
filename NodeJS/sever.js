@@ -47,7 +47,7 @@ var database = new sqlite.Database('./database/dbchat.db', sqlite.OPEN_CREATE | 
             var toJsonObj = {
                 eventName:"",
                 data:"test:111111",
-                username:""
+                Username:""
             }
             //===============================================
             toJsonObj = JSON.parse(data);
@@ -285,18 +285,18 @@ var database = new sqlite.Database('./database/dbchat.db', sqlite.OPEN_CREATE | 
                         if(rows.length > 0){
                             var callbackMsg = {
                                 eventName:"Login",
-                                data:"success"
+                                data:"success",
+                                Username:rows[0].UserName
                             }
                             //===============================================
                             var toJsonStr = JSON.stringify(callbackMsg);
                             ws.send(toJsonStr);
                             //===============================================
-                            console.log("[2]" +toJsonStr);
-                            //===============================================
-                            /*database.all("SELECT UserName FROM userData WHERE UserID='"+userID+"'", ()=>{
+                            /*console.log("[2]" +toJsonStr);
+                            database.all("SELECT UserName FROM userData WHERE UserID='"+userID+"'", ()=>{
                                 var UserSendBackToClient = {
                                     eventName:"ShowUserName",
-                                    data:"" + rows[0].UserName
+                                    Username:rows[0].UserName
                                 }
                                 //===============================================
                                 var toJsonUser = JSON.stringify(UserSendBackToClient);

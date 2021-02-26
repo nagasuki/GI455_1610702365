@@ -112,7 +112,7 @@ namespace LobbyRoomExample
         {
             mainRoom.SetActive(true);
 
-            string url = "ws://127.0.0.1:4624/";
+            string url = "ws://25.97.148.109:4624/";
 
             ws = new WebSocket(url);
 
@@ -201,7 +201,7 @@ namespace LobbyRoomExample
 
             string toJsonStr = JsonUtility.ToJson(socketEvent);
 
-            ws.Send(toJsonStr);
+            ws.Send(toJsonStr);            
 
             roomNameInputField.text = null;
             joinRoomInputField.text = null;
@@ -350,10 +350,13 @@ namespace LobbyRoomExample
                         {
                             if (OnLeaveRoom != null)
                                 OnLeaveRoom(receiveMessageData.data);
+                            sendText.text = "";
+                            receiveText.text = "";
                             break;
                         }
                     case "Login":
                         {
+                            var receiveUsernameData = JsonUtility.FromJson<MessageData>(messageRoomName);
                             if (OnLogin != null)
                                 OnLogin(receiveMessageData.data);
                             if (receiveMessageData.data != "fail")
@@ -361,24 +364,13 @@ namespace LobbyRoomExample
                                 lobbyRoom.SetActive(true);
                                 mainRoom.SetActive(false);
                                 loginPage.SetActive(false);
+                                Username = receiveUsernameData.Username;
+                                showUser.text = Username;
                             }
                             else
                             {
                                 showLoginPopUp.SetActive(true);
                                 loginMessagePopUp.text = "[ Login Fail ]";
-                            }
-                            break;
-                        }
-                    case "ShowUserName":
-                        {
-                            var receiveUsernameData = JsonUtility.FromJson<MessageData>(messageRoomName);
-
-                            if (OnShowUsername != null)
-                                OnShowUsername(receiveUsernameData.Username);
-                            if (receiveUsernameData.Username != "")
-                            {
-                                Username = receiveUsernameData.Username;
-                                showUser.text = Username;
                             }
                             break;
                         }
